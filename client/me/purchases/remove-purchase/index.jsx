@@ -56,17 +56,15 @@ const RemovePurchase = React.createClass( {
 
 				if ( isDomainRegistration( purchase ) ) {
 					notices.success(
-						this.translate( 'The domain {{em}}%(domain)s{{/em}} was removed from your account.', {
-							args: { domain: productName },
-							components: { em: <em /> }
+						this.translate( 'The domain {{domain/}} was removed from your account.', {
+							components: { domain: <em>{ productName }</em> }
 						} ),
 						{ persistent: true }
 					);
 				} else {
 					notices.success(
-						this.translate( '%(productName)s was removed from {{em}}%(siteSlug)s{{/em}}.', {
-							args: { productName, siteSlug: selectedSite.slug },
-							components: { em: <em /> }
+						this.translate( '%(productName)s was removed from {{siteName/}}.', {
+							components: { siteName: <em>{ selectedSite.slug }</em> }
 						} ),
 						{ persistent: true }
 					);
@@ -148,10 +146,9 @@ const RemovePurchase = React.createClass( {
 				<p>
 					{
 						this.translate(
-							'The domain associated with this plan, {{em}}%(domain)s{{/em}}, will not be removed. It will remain active on your site, unless also removed.',
+							'The domain associated with this plan, {{domain/}}, will not be removed. It will remain active on your site, unless also removed.',
 							{
-								args: { domain: getIncludedDomain( purchase ) },
-								components: { em: <em /> }
+								components: { domain: <em>{ getIncludedDomain( purchase ) }</em> }
 							}
 						)
 					}
@@ -163,14 +160,12 @@ const RemovePurchase = React.createClass( {
 			<div>
 				<p>
 					{
-						this.translate( 'Are you sure you want to remove %(productName)s from {{em}}%(siteSlug)s{{/em}}?', {
-							args: { productName, siteSlug: this.props.selectedSite.slug },
-							components: { em: <em /> }
+						this.translate( 'Are you sure you want to remove %(productName)s from {{siteName/}}?', {
+							components: { siteName: <em>{ this.props.selectedSite.slug }</em> }
 						} )
 					}
 					{ ' ' }
 					{ this.translate( 'You will not be able to reuse it again without purchasing a new subscription.', {
-						context: "Removal confirmation on Manage Purchase page",
 						comment: "'it' refers to a product purchased by a user"
 					} ) }
 				</p>
