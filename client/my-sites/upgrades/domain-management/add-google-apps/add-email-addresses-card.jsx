@@ -153,7 +153,7 @@ const AddEmailAddressesCard = React.createClass( {
 				<FormTextInputWithAffixes
 					onChange={ this.handleFieldChange.bind( this, 'username', index ) }
 					onFocus={ this.handleFieldFocus.bind( this, 'Email', index ) }
-					placeholder={ this.translate( 'e.g. contact', { textOnly: true, comment: 'Placeholder example email username: contact@...' } ) }
+					placeholder={ this.translate( 'e.g. %(example)s', { args: { example: 'contact' } } ) }
 					suffix={ suffix }
 					type="text"
 					value={ field.username.value } />
