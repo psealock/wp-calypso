@@ -117,7 +117,8 @@ const EmailForwardingAddNew = React.createClass( {
 	},
 
 	formFields() {
-		const exampleEmailText = this.translate( 'e.g. %(example)s', { args: { example: 'contact' } } );
+		const contactText = this.translate( 'contact', { context: 'part of e-mail address', comment: 'As it would be part of an e-mail address contact@example.com' } );
+		const exampleEmailText = this.translate( 'e.g. %(example)s', { args: { example: contactText } } );
 
 		if ( ! this.shouldShowForm() ) {
 			return null;
