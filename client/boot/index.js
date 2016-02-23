@@ -379,6 +379,7 @@ function reduxStoreReady( reduxStore ) {
 }
 
 function show404( context ) {
+	ReactDom.unmountComponentAtNode( document.getElementById( 'secondary' ) );
 	context.store.dispatch( setSection( null, { hasSidebar: false } ) );
 
 	Page404 = require( 'layout/404' );
