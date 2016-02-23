@@ -68,6 +68,7 @@ function splitTemplate( path, module, chunkName ) {
 
 	result = [
 		'page( ' + path + ', function( context, next ) {',
+		'	context.sectionRouteMatched = true;',
 		'	if ( _loadedSections[ ' + JSON.stringify( module ) + ' ] ) {',
 		'		layoutFocus.next();',
 		'		return next();',
