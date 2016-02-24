@@ -746,6 +746,7 @@ normalizePost.content = {
 
 			return {
 				type: embedType,
+				src: iframe.src,
 				iframe: iframe.outerHTML,
 				aspectRatio: aspectRatio,
 				width: width,
