@@ -92,13 +92,15 @@ function maybeRedirect( context, postType, site ) {
 	return false;
 }
 
-function getPressThisContent( text, url, title, image, embed ) {
+function getPressThisContent( query ) {
+	const { text, url, title, image, embed } = query;
 	const pieces = [];
+
 	if ( image ) {
 		pieces.push( ReactDomServer.renderToStaticMarkup( <p><a href={ url }><img src={ image } /></a></p> ) );
 	}
 	if ( isValidUrl( embed ) ) {
-		pieces.push( embed );
+		pieces.push( ReactDomServer.renderToStaticMarkup( <p>{ embed }</p> ) );
 	}
 	if ( text ) {
 		pieces.push( ReactDomServer.renderToStaticMarkup( <blockquote>{ text }</blockquote> ) );
@@ -152,7 +154,7 @@ module.exports = {
 
 				// handle press-this params if applicable
 				if ( context.query.url ) {
-					const pressThisContent = getPressThisContent( context.query.text, context.query.url, context.query.title, context.query.image, context.query.embed );
+					const pressThisContent = getPressThisContent( context.query );
 					Object.assign( postOptions, {
 						postFormat: 'quote',
 						title: context.query.title,
