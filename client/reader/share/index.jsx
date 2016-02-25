@@ -46,12 +46,12 @@ var actionMap = {
 		window.open( fackbookUrl, 'facebook', 'width=626,height=436,resizeable,scrollbars' );
 	},
 	pressThis: function( post ) {
-		let primarySite = sitesList.getPrimary();
+		const primarySite = sitesList.getPrimary();
 		if ( ! primarySite ) {
 			return;
 		}
 
-		let args = {};
+		const args = {};
 
 		if ( post.content_embeds && post.content_embeds.length ) {
 			args.embed = post.content_embeds[0].src;
