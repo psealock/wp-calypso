@@ -3,7 +3,6 @@ var React = require( 'react' ),
 	defer = require( 'lodash/defer' ),
 	config = require( 'config' ),
 	classnames = require( 'classnames' ),
-	page = require( 'page' ),
 	qs = require( 'qs' );
 
 var PopoverMenu = require( 'components/popover/menu' ),
@@ -11,7 +10,9 @@ var PopoverMenu = require( 'components/popover/menu' ),
 	Gridicon = require( 'components/gridicon' ),
 	sitesList = require( 'lib/sites-list' )(),
 	stats = require( 'reader/stats' ),
-	SocialLogo = require( 'components/social-logo' );
+	SocialLogo = require( 'components/social-logo' ),
+	SitesPopover = require( 'components/sites-popover' ),
+	sections = require( 'sections' );
 
 var actionMap = {
 	twitter: function( post ) {
@@ -44,34 +45,31 @@ var actionMap = {
 		fackbookUrl = url.format( fackbookUrl );
 
 		window.open( fackbookUrl, 'facebook', 'width=626,height=436,resizeable,scrollbars' );
-	},
-	pressThis: function( post ) {
-		const primarySite = sitesList.getPrimary();
-		if ( ! primarySite ) {
-			return;
-		}
-
-		const args = {};
-
-		if ( post.content_embeds && post.content_embeds.length ) {
-			args.embed = post.content_embeds[0].src;
-		} else if ( post.canonical_image && post.canonical_image.uri ) {
-			args.image = post.canonical_image.uri;
-		}
-
-		args.title = post.title;
-		args.text = post.excerpt;
-		args.url = post.URL;
-
-		const query = qs.stringify( args );
-
-		defer( () => { // defer to give the menu time to close and unmount
-			page( `/post/${ primarySite.slug }?${ query }` )
-		} );
 	}
 };
 
-var ReaderShare = React.createClass( {
+function buildQuerystringForPost( post ) {
+	const primarySite = sitesList.getPrimary();
+	if ( ! primarySite ) {
+		return;
+	}
+
+	const args = {};
+
+	if ( post.content_embeds && post.content_embeds.length ) {
+		args.embed = post.content_embeds[0].src;
+	} else if ( post.canonical_image && post.canonical_image.uri ) {
+		args.image = post.canonical_image.uri;
+	}
+
+	args.title = `${ post.title } — ${ post.site_name }`;
+	args.text = post.excerpt;
+	args.url = post.URL;
+
+	return qs.stringify( args );
+}
+
+const ReaderShare = React.createClass( {
 
 	getInitialState() {
 		return { showingMenu: false };
@@ -79,24 +77,63 @@ var ReaderShare = React.createClass( {
 
 	getDefaultProps() {
 		return {
-			position: 'top left',
+			position: 'top',
 			tagName: 'li'
 		};
 	},
 
-	toggle( event ) {
-		event.preventDefault();
-		this.setState( { showingMenu: ! this.state.showingMenu } );
+	componentWillUnmount() {
+		if ( this._closeHandle ) {
+			clearTimeout( this._closeHandle );
+			this._closeHandle = null;
+		}
 	},
 
-	closeMenu( action ) {
-		var actionFunc = actionMap[ action ];
+	toggle( event ) {
+		event.preventDefault();
+		if ( ! this.state.showingMenu ) {
+			const target = !! sitesList.getPrimary() ? 'wordpress' : 'external';
+			stats.recordAction( 'open_share' );
+			stats.recordGaEvent( 'Opened Share to ' + target );
+			stats.recordTrack( 'calypso_reader_share_opened', {
+				target
+			} );
+		}
+		this._closeHandle = defer( () => {
+			this.setState( { showingMenu: ! this.state.showingMenu } );
+		} );
+	},
+
+	closeMenu() {
+		// have to defer this to let the mouseup / click escape.
+		// If we don't defer and remove the DOM node on this turn of the event loop,
+		// Chrome (at least) will not fire the click
+		this._closeHandle = defer( () => {
+			this.setState( { showingMenu: false } );
+		} );
+	},
+
+	closeWordPressShareMenu( event ) {
+		console.log(event);
+		this.closeMenu();
+		stats.recordAction( 'share_wordpress' );
+		stats.recordGaEvent( 'Clicked on Share to WordPress' );
+		stats.recordTrack( 'calypso_reader_share_to_site' );
+	},
+
+	closeExternalShareMenu( action ) {
+		this.closeMenu();
+		const actionFunc = actionMap[ action ];
 		if ( actionFunc ) {
 			stats.recordAction( 'share_' + action );
 			stats.recordGaEvent( 'Clicked on Share to ' + action );
+			stats.recordTrack( 'calypso_reader_share_to_' + action );
 			actionFunc( this.props.post );
 		}
-		this.setState( { showingMenu: false } );
+	},
+
+	preloadEditor() {
+		sections.preload( 'post-editor' );
 	},
 
 	render() {
@@ -112,24 +149,38 @@ var ReaderShare = React.createClass( {
 		return React.createElement( this.props.tagName, {
 			className: 'reader-share',
 			onClick: this.toggle,
+			onTouchStart: this.preloadEditor,
+			onMouseEnter: this.preloadEditor,
 			ref: 'shareButton' },
 			[
 				( <span key="button" ref="shareButton" className={ buttonClasses }>
 					<Gridicon icon="share" size={ 24 } />
 					<span className="reader-share__button-label">{ this.translate( 'Share', { comment: 'Share the post' } ) }</span>
 				</span> ),
-				( <PopoverMenu key="menu" context={ this.refs && this.refs.shareButton }
-					isVisible={ this.state.showingMenu }
-					onClose={ this.closeMenu }
-					position={ this.props.position }
-					className="popover reader-share__popover">
-					{ canShareToWordpress ? <PopoverMenuItem action="pressThis" className="reader-share__popover-item">
-						<Gridicon icon="my-sites" size={ 24 } /> WordPress</PopoverMenuItem> : null }
-					<PopoverMenuItem action="twitter" className="reader-share__popover-item">
-						<SocialLogo icon="twitter" /> Twitter</PopoverMenuItem>
-					<PopoverMenuItem action="facebook" className="reader-share__popover-item">
-						<SocialLogo icon="facebook" /> Facebook</PopoverMenuItem>
-				</PopoverMenu> )
+				( this.state.showingMenu &&
+						( canShareToWordpress
+						? <SitesPopover
+								key="menu"
+								sites={ sitesList }
+								siteQuerystring={ buildQuerystringForPost( this.props.post ) }
+								context={ this.refs && this.refs.shareButton }
+								visible={ this.state.showingMenu }
+								groups={ true }
+								onClose={ this.closeWordPressShareMenu }
+								position={ this.props.position }
+								className="is-reader"/>
+						: <PopoverMenu key="menu" context={ this.refs && this.refs.shareButton }
+								isVisible={ this.state.showingMenu }
+								onClose={ this.closeExternalShareMenu }
+								position={ this.props.position }
+								className="popover reader-share__popover">
+								<PopoverMenuItem action="twitter" className="reader-share__popover-item">
+									<SocialLogo icon="twitter" /> Twitter</PopoverMenuItem>
+								<PopoverMenuItem action="facebook" className="reader-share__popover-item">
+									<SocialLogo icon="facebook" /> Facebook</PopoverMenuItem>
+							</PopoverMenu>
+						)
+					)
 			]
 		);
 	}
