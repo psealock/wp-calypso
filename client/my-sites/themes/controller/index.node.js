@@ -11,7 +11,7 @@ import omit from 'lodash/omit';
 import { ThemeSheet as ThemeSheetComponent } from 'my-sites/themes/sheet';
 import ThemeDetailsComponent from 'components/data/theme-details';
 import i18n from 'lib/mixins/i18n';
-import buildTitle from 'lib/screen-title/utils';
+//import buildTitle from 'lib/screen-title/utils';
 import { getCurrentUser } from 'state/current-user/selectors';
 import { setSection } from 'state/ui/actions';
 import ClientSideEffects from 'components/client-side-effects';
@@ -52,9 +52,9 @@ export function details( context, next ) {
 	const props = {
 		themeSlug: context.params.slug,
 		contentSection: context.params.section,
-		title: buildTitle(
-			i18n.translate( 'Theme Details', { textOnly: true } )
-		),
+		title: //buildTitle(
+			i18n.translate( 'Theme Details', { textOnly: true } ),
+		//),
 		isLoggedIn: !! user
 	};
 
