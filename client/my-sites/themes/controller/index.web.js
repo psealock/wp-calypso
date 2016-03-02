@@ -11,7 +11,7 @@ import buildTitle from 'lib/screen-title/utils';
 import { getAnalyticsData } from '../helpers';
 import { setSection } from 'state/ui/actions';
 import { makeElement } from './index.node.js';
-export { details, makeLoggedOutLayout } from './index.node.js';
+export { details } from './index.node.js';
 
 function getProps( context ) {
 	const { tier, site_id: siteId } = context.params;
