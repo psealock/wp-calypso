@@ -94,6 +94,7 @@ export function fetchThemeDetails( id ) {
 					themeDescription: data.description,
 					themeDescriptionLong: data.description_long,
 					themeSupportDocumentation: data.extended ? data.extended.support_documentation : undefined,
+					themeDateUpdated: data.date_updated,
 				} );
 			}
 		};

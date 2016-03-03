@@ -410,6 +410,7 @@ module.exports = function() {
 					themeDescription: theme.description,
 					themeDescriptionLong: theme.description_long,
 					themeSupportDocumentation: theme.extended ? theme.extended.support_documentation : undefined,
+					themeDateUpdated: theme.date_updated,
 				} );
 
 				store.dispatch( setSection( 'themes', { hasSidebar: false, isFullScreen: true } ) );
