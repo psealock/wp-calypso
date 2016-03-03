@@ -134,6 +134,7 @@ const AddEmailAddressesCard = React.createClass( {
 
 	emailAddressFieldset( index ) {
 		const field = this.state.fieldsets[ index ];
+		const contactText = this.translate( 'contact', { context: 'part of e-mail address', comment: 'As it would be part of an e-mail address contact@example.com' } );
 		let suffix, select;
 
 		if ( this.props.selectedDomainName ) {
@@ -153,7 +154,7 @@ const AddEmailAddressesCard = React.createClass( {
 				<FormTextInputWithAffixes
 					onChange={ this.handleFieldChange.bind( this, 'username', index ) }
 					onFocus={ this.handleFieldFocus.bind( this, 'Email', index ) }
-					placeholder={ this.translate( 'e.g. %(example)s', { args: { example: 'contact' } } ) }
+					placeholder={ this.translate( 'e.g. %(example)s', { args: { example: contactText } } ) }
 					suffix={ suffix }
 					type="text"
 					value={ field.username.value } />
