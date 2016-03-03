@@ -64,6 +64,7 @@ const RemovePurchase = React.createClass( {
 				} else {
 					notices.success(
 						this.translate( '%(productName)s was removed from {{siteName/}}.', {
+							args: { productName },
 							components: { siteName: <em>{ selectedSite.slug }</em> }
 						} ),
 						{ persistent: true }
@@ -161,6 +162,7 @@ const RemovePurchase = React.createClass( {
 				<p>
 					{
 						this.translate( 'Are you sure you want to remove %(productName)s from {{siteName/}}?', {
+							args: { productName },
 							components: { siteName: <em>{ this.props.selectedSite.slug }</em> }
 						} )
 					}
