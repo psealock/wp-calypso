@@ -19,8 +19,8 @@ import QueryPostTypes from 'components/data/query-post-types';
 function EditorPostType( { siteId, isNew, typeSlug, type } ) {
 	let label;
 	switch ( typeSlug ) {
-		case 'page': label = isNew ? translate( 'New Page' ) : translate( 'Page' ); break;
-		case 'post': label = isNew ? translate( 'New Post' ) : translate( 'Post' ); break;
+		case 'page': label = isNew ? translate( 'New Page' ) : translate( 'Page', { context: 'noun' } ); break;
+		case 'post': label = isNew ? translate( 'New Post' ) : translate( 'Post', { context: 'noun' } ); break;
 		default: label = isNew ? get( type, 'labels.new_item' ) : get( type, 'labels.singular_name' );
 	}
 
