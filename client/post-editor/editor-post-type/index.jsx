@@ -45,11 +45,6 @@ EditorPostType.propTypes = {
 	type: PropTypes.object
 };
 
-EditorPostType.defaultProps = {
-	isNew: false,
-	type: 'post'
-};
-
 export default connect( ( state ) => {
 	const props = { isNew: isEditorNewPost( state ) };
 	const site = getSelectedSite( state );
