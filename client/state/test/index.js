@@ -179,6 +179,10 @@ describe( 'state', () => {
 		require( '../users/test/selectors' );
 
 		describe( 'editor', () => {
+			require( '../ui/editor/test/actions' );
+			require( '../ui/editor/test/reducer' );
+			require( '../ui/editor/test/selectors' );
+
 			describe( 'contact-form', () => {
 				require( '../ui/editor/contact-form/test/actions' );
 				require( '../ui/editor/contact-form/test/reducer' );
