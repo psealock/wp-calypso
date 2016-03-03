@@ -14,6 +14,7 @@ const sites = require( 'lib/sites-list' )();
 const user = require( 'lib/user' )();
 import { getSavedVariations } from 'lib/abtest';
 import SignupCart from 'lib/signup/cart';
+import { getLocaleSlug } from 'lib/i18n-utils';
 
 function fetchSitesUntilSiteAppears( siteSlug, callback ) {
 	sites.once( 'change', function() {
@@ -58,7 +59,8 @@ module.exports = {
 			blog_name: siteUrl,
 			blog_title: siteUrl,
 			options: {
-				theme: dependencies.theme
+				theme: dependencies.theme,
+				locale: getLocaleSlug()
 			},
 			validate: false,
 			find_available_url: isPurchasingItem
