@@ -21,10 +21,10 @@ var config = require( 'config' ),
 	i18n = require( 'lib/mixins/i18n' ),
 	createReduxStore = require( 'state' ).createReduxStore,
 	setSection = require( 'state/ui/actions' ).setSection,
+	receiveThemeDetails = require( 'state/themes/actions' ).receiveThemeDetails,
 	ThemeSheet = require( 'my-sites/themes/sheet' ).default,
 	ThemeDetails = require( 'components/data/theme-details' ),
-	wpcom = require( 'lib/wp' ),
-	ThemesActionTypes = require( 'state/themes/action-types' );
+	wpcom = require( 'lib/wp' );
 
 var HASH_LENGTH = 10,
 	URL_BASE_PATH = '/calypso',
@@ -400,18 +400,7 @@ module.exports = function() {
 			function renderThemeSheet( theme ) {
 				const context = {};
 				const store = createReduxStore();
-				store.dispatch( {
-					type: ThemesActionTypes.RECEIVE_THEME_DETAILS,
-					themeId: theme.id,
-					themeName: theme.name,
-					themeAuthor: theme.author,
-					themeScreenshot: theme.screenshot,
-					themePrice: theme.price ? theme.price.display : undefined,
-					themeDescription: theme.description,
-					themeDescriptionLong: theme.description_long,
-					themeSupportDocumentation: theme.extended ? theme.extended.support_documentation : undefined,
-					themeDateUpdated: theme.date_updated,
-				} );
+				store.dispatch( receiveThemeDetails( theme ) );
 
 				store.dispatch( setSection( 'themes', { hasSidebar: false, isFullScreen: true } ) );
 				context.initialReduxState = pick( store.getState(), 'ui', 'themes' );

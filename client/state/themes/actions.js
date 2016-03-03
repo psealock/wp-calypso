@@ -84,21 +84,25 @@ export function fetchThemeDetails( id ) {
 			if ( error ) {
 				dispatch( receiveServerError( error ) );
 			} else {
-				dispatch( {
-					type: ActionTypes.RECEIVE_THEME_DETAILS,
-					themeId: data.id,
-					themeName: data.name,
-					themeAuthor: data.author,
-					themePrice: data.price ? data.price.display : undefined,
-					themeScreenshot: data.screenshot,
-					themeDescription: data.description,
-					themeDescriptionLong: data.description_long,
-					themeSupportDocumentation: data.extended ? data.extended.support_documentation : undefined,
-					themeDateUpdated: data.date_updated,
-				} );
+				dispatch( receiveThemeDetails( data ) );
 			}
 		};
 		wpcom.undocumented().themeDetails( id, callback );
+	}
+}
+
+export function receiveThemeDetails( theme ) {
+	return {
+		type: ActionTypes.RECEIVE_THEME_DETAILS,
+		themeId: theme.id,
+		themeName: theme.name,
+		themeAuthor: theme.author,
+		themeScreenshot: theme.screenshot,
+		themePrice: theme.price ? theme.price.display : undefined,
+		themeDescription: theme.description,
+		themeDescriptionLong: theme.description_long,
+		themeSupportDocumentation: theme.extended ? theme.extended.support_documentation : undefined,
+		themeDateUpdated: theme.date_updated,
 	}
 }
 
