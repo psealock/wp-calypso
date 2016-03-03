@@ -35,6 +35,7 @@
 }
 
 .editor-contact-form-modal .section-nav {
+	z-index: z-index( '.dialog__backdrop', '.editor-contact-form-modal .section-nav' );
 	padding: 0 16px;
 
 	@include breakpoint( ">660px" ) {
