@@ -39,8 +39,7 @@ var staticFiles = [
 	{ path: 'style-rtl.css' }
 ];
 
-var chunksByPath = {},
-	themeDetails = new Map();
+var chunksByPath = {};
 
 sections.forEach( function( section ) {
 	section.paths.forEach( function( path ) {
@@ -381,24 +380,18 @@ module.exports = function() {
 
 	if ( config.isEnabled( 'manage/themes/details' ) ) {
 		app.get( '/theme/:theme_slug/:section?', function( req, res ) {
-			function updateRenderCache( themeSlug ) {
+			function updateRenderCache( themeSlug, context ) {
 				wpcom.undocumented().themeDetails( themeSlug, ( error, data ) => {
 					if ( error ) {
 						debug( `Error fetching theme ${ themeSlug } details: `, error.message || error );
 						return;
 					}
-					const themeData = themeDetails.get( themeSlug );
-					if ( ! themeData || ( Date( data.date_updated ) > Date( themeData.date_updated ) ) ) {
-						debug( 'caching', themeSlug );
-						themeDetails.set( themeSlug, data );
-						// update the render cache
-						renderThemeSheet( data );
-					}
+					debug( 'caching', themeSlug );
+					renderThemeSheet( data, context );
 				} );
 			}
 
-			function renderThemeSheet( theme ) {
-				const context = {};
+			function renderThemeSheet( theme, context ) {
 				const store = createReduxStore();
 				store.dispatch( receiveThemeDetails( theme ) );
 
@@ -415,22 +408,16 @@ module.exports = function() {
 				const path = url.parse( req.url ).path;
 				const key = JSON.stringify( element ) + path + JSON.stringify( context.initialReduxState );
 				Object.assign( context, render( element, key ) );
-				return context;
+				res.render( 'index.jade', context );
 			};
 
 			const context = getDefaultContext( req );
 			if ( config.isEnabled( 'server-side-rendering' ) ) {
-				const theme = themeDetails.get( req.params.theme_slug );
-				if ( theme ) {
-					Object.assign( context, renderThemeSheet( theme ) );
-					debug( 'found theme!', theme.id );
-				}
-
 				i18n.initialize();
-				req.params.theme_slug && updateRenderCache( req.params.theme_slug ); // TODO(ehg): We don't want to hit the endpoint for every req. Debounce based on theme arg?
+				req.params.theme_slug && updateRenderCache( req.params.theme_slug, context ); // TODO(ehg): We don't want to hit the endpoint for every req. Debounce based on theme arg?
+			} else {
+				res.render( 'index.jade', context );
 			}
-
-			res.render( 'index.jade', context );
 		} );
 	}
 
