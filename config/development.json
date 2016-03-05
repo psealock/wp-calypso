@@ -80,6 +80,7 @@
 		"me/security": true,
 		"me/security/checkup": true,
 		"me/trophies": false,
+		"tailor": true,
 		"muse": true,
 		"network-connection": true,
 		"notifications2beta": true,
