@@ -48,12 +48,12 @@ module.exports = React.createClass( {
 		}
 
 		return (
- 	        <div className="plan-price">
- 	            <span>{ this.getPrice() }</span>
- 	            <small className="plan-price__billing-period">
- 	                { hasDiscount ? this.translate( 'for first year' ) : plan.bill_period_label }
- 	            </small>
- 	        </div>
- 	    );
+			<div className="plan-price">
+				<span>{ this.getPrice() }</span>
+				<small className="plan-price__billing-period">
+					{ hasDiscount ? this.translate( 'for first year' ) : plan.bill_period_label }
+				</small>
+			</div>
+		);
 	}
 } );
