@@ -53,7 +53,6 @@ export default React.createClass( {
 	},
 
 	render: function() {
-		console.log( config.isEnabled( 'jetpack/calypso-first-signup-flow' ) );
 		return (
 			<div className="step-wrapper">
 				<StepHeader
