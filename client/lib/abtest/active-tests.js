@@ -87,4 +87,12 @@ module.exports = {
 		},
 		defaultVariation: 'original'
 	},
+	privacyCheckbox: {
+		datestamp: '20000307',
+		variations: {
+			original: 50,
+			checkbox: 50
+		},
+		defaultVariation: 'original'
+	},
 };
