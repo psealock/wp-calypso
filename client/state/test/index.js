@@ -190,4 +190,10 @@ describe( 'state', () => {
 		require( '../users/test/reducer' );
 		require( '../users/test/selectors' );
 	} );
+
+	describe( 'google-apps-users', () => {
+		require( '../google-apps-users/test/actions' );
+		require( '../google-apps-users/test/reducer' );
+		require( '../google-apps-users/test/selectors' );
+	} );
 } );
