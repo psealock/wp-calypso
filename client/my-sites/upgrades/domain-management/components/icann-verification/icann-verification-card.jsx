@@ -44,7 +44,7 @@ let IcannVerificationCard = React.createClass( {
 						'Use this button to resend the verification email. It contains a link to verify your address. ' +
 						'{{a}}Learn more{{/a}}.', {
 							components: {
-								a: <a 
+								a: <a
 								href="https://en.support.wordpress.com/register-domain/#email-validation-and-verification"
 								target="_blank"
 								/>
