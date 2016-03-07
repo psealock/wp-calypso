@@ -4,18 +4,13 @@
 var React = require( 'react' ),
 	isUndefined = require( 'lodash/isUndefined' );
 
-/**
- * Internal dependencies
- */
-import { abtest } from 'lib/abtest';
-
 var WpcomPlanPrice = require( 'my-sites/plans/wpcom-plan-price' );
 
 module.exports = React.createClass( {
 	displayName: 'PlanPrice',
 
 	getFormattedPrice: function( plan ) {
-		let rawPrice, formattedPrice;
+		var rawPrice, formattedPrice;
 
 		if ( plan ) {
 			// the properties of a plan object from sites-list is snake_case
@@ -25,11 +20,6 @@ module.exports = React.createClass( {
 
 			if ( rawPrice === 0 ) {
 				return this.translate( 'Free', { context: 'Zero cost product price' } );
-			}
-
-			if ( abtest( 'monthlyPlanPricing' ) === 'monthly' && this.props.isInSignup ) {
-				const monthlyPrice = +( rawPrice / 12 ).toFixed( 2 );
-				formattedPrice = formattedPrice.replace( rawPrice, monthlyPrice );
 			}
 
 			return formattedPrice;
@@ -50,26 +40,20 @@ module.exports = React.createClass( {
 	},
 
 	render: function() {
-		let periodLabel;
-		const { plan, site, sitePlan: details } = this.props,
-			hasDiscount = details && details.rawDiscount > 0;
+		const { plan, sitePlan: details } = this.props;
+		const hasDiscount = details && details.rawDiscount > 0;
 
 		if ( this.props.isPlaceholder ) {
 			return <div className="plan-price is-placeholder" />;
 		}
 
-		if ( abtest( 'monthlyPlanPricing' ) === 'monthly' && this.props.isInSignup && plan.raw_price !== 0 ) {
-			periodLabel = this.translate( 'per month, billed yearly' );
-		} else {
-			periodLabel = hasDiscount ? this.translate( 'due today when you upgrade' ) : plan.bill_period_label
-		}
-
 		return (
-			<WpcomPlanPrice
-				getPrice={ this.getPrice }
-				hasDiscount={ hasDiscount }
-				periodLabel={ periodLabel }
-				plan={ plan } />
-		);
+ 	        <div className="plan-price">
+ 	            <span>{ this.getPrice() }</span>
+ 	            <small className="plan-price__billing-period">
+ 	                { hasDiscount ? this.translate( 'for first year' ) : plan.bill_period_label }
+ 	            </small>
+ 	        </div>
+ 	    );
 	}
 } );
