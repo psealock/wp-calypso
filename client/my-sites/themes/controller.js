@@ -141,12 +141,6 @@ export function details( context, next ) {
 		isLoggedIn: !! user
 	};
 
-	context.store.dispatch( setSection( 'themes', {
-		hasSidebar: false,
-		isFullScreen: true
-	} ) );
-
-	context.secondary = null; // When we're logged in, we need to remove the sidebar.
 	//TODO: use makeElement()
 	context.primary = (
 		<ReduxProvider store={ context.store } >

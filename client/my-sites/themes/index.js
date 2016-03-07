@@ -5,6 +5,7 @@ import config from 'config';
 import userFactory from 'lib/user';;
 import { navigation, siteSelection } from 'my-sites/controller';
 import { singleSite, multiSite, loggedOut, details, makeLoggedOutLayout } from './controller';
+import { removeSidebarMiddleware } from 'lib/react-helpers';
 
 const user = userFactory();
 
@@ -22,12 +23,17 @@ const designRoutes = isLoggedIn
 		'/design/type/:tier': [ loggedOut, makeLoggedOutLayout ]
 	};
 
+const removeSidebarThemes = removeSidebarMiddleware( {
+	section: 'themes',
+	isFullScreen: true
+} );
+
 const themesRoutes = isLoggedIn
 	? {
-		'/theme/:slug/:section?/:site_id?': [ details ],
+		'/theme/:slug/:section?/:site_id?': [ details, removeSidebarThemes ],
 	}
 	: {
-		'/theme/:slug/:section?': [ details, makeLoggedOutLayout ],
+		'/theme/:slug/:section?': [ details, removeSidebarThemes, makeLoggedOutLayout ],
 	};
 
 const routes = Object.assign( {},
