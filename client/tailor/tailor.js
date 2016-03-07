@@ -33,6 +33,7 @@ const Tailor = React.createClass( {
 		return {
 			showingControl: null,
 			previewDoc: null,
+			isUnsaved: false,
 		};
 	},
 
@@ -61,6 +62,7 @@ const Tailor = React.createClass( {
 
 	changePreviewState( newState ) {
 		this.props.actions.changePreviewState( newState );
+		this.setState( { isUnsaved: true } );
 	},
 
 	buildControl( config ) {
@@ -85,6 +87,7 @@ const Tailor = React.createClass( {
 
 	onSave() {
 		controlConfig.map( config => config.saveFunction( this.props.actions, this.props.previewState ) );
+		this.setState( { isUnsaved: false } );
 	},
 
 	onPreviewLoad( doc ) {
@@ -108,6 +111,7 @@ const Tailor = React.createClass( {
 					controls={ this.getControls() }
 					showControl={ this.showControl }
 					showingControl={ showingControl }
+					isUnsaved={ this.state.isUnsaved }
 					onClickBack={ this.onClickBack }
 					onSave={ this.onSave }
 				/>

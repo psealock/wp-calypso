@@ -10,13 +10,17 @@ import noop from 'lodash/noop';
 import Gridicon from 'components/gridicon';
 import Button from 'components/button';
 import ControlList from './control-list';
+import { translate } from 'lib/mixins/i18n';
 
-const TopNav = props => (
-	<div className="tailor-controls__top-nav">
-		<Gridicon icon="cross-small" size={ 24 } className="tailor-controls__close-button" onClick={ props.onClose } />
-		<Button compact primary className="tailor-controls__save-button" onClick={ props.onSave }>Save</Button>
-	</div>
-);
+const TopNav = props => {
+	const saveButtonText = props.isUnsaved ? translate( 'Save & Publish' ) : translate( 'Saved' );
+	return (
+		<div className="tailor-controls__top-nav">
+			<Gridicon icon="cross-small" size={ 24 } className="tailor-controls__close-button" onClick={ props.onClose } />
+			<Button compact primary className="tailor-controls__save-button" disabled={ ! props.isUnsaved } onClick={ props.onSave }>{ saveButtonText }</Button>
+		</div>
+	);
+}
 
 const Header = props => (
 	<div className="tailor-controls__header">
@@ -30,6 +34,7 @@ const TailorControls = React.createClass( {
 	propTypes: {
 		onSave: React.PropTypes.func.isRequired,
 		onClickBack: React.PropTypes.func.isRequired,
+		isUnsaved: React.PropTypes.bool,
 		showControl: React.PropTypes.func.isRequired,
 		showingControl: React.PropTypes.shape( {
 			id: React.PropTypes.string.isRequired,
@@ -60,7 +65,7 @@ const TailorControls = React.createClass( {
 	render() {
 		return (
 			<div className="tailor-controls">
-				<TopNav onSave={ this.props.onSave } onClose={ noop } />
+				<TopNav onSave={ this.props.onSave } onClose={ noop } isUnsaved={ this.props.isUnsaved } />
 				{ this.renderHeader() }
 				{ this.renderControlList() }
 			</div>
