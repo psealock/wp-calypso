@@ -95,7 +95,8 @@ var PlansCompare = React.createClass( {
 					site={ site }
 					cart={ this.props.cart }
 					features={ featuresList }
-					sitePlans={ this.props.sitePlans } />
+					sitePlans={ this.props.sitePlans }
+					isSubmitting={ this.props.transaction.step.name === 'submitting-wpcom-request' } />
 			);
 		}, this );
 	},

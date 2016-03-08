@@ -74,7 +74,8 @@ module.exports = React.createClass( {
 					plan={ this.props.plan }
 					site={ this.props.site }
 					sitePlan={ sitePlan }
-					cart={ this.props.cart } />
+					cart={ this.props.cart }
+					isSubmitting={ this.props.isSubmitting } />
 				<PlanDiscountMessage
 					plan={ this.props.plan }
 					sitePlan={ sitePlan }
