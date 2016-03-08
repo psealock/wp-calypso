@@ -9,6 +9,7 @@ import React from 'react';
 import IcannVerification from './icann-verification';
 import support from 'lib/url/support';
 
+
 let IcannVerificationCard = React.createClass( {
 	propTypes: {
 		handleSubmit: React.PropTypes.func.isRequired,
@@ -44,10 +45,10 @@ let IcannVerificationCard = React.createClass( {
 						'Use this button to resend the verification email. It contains a link to verify your address. ' +
 						'{{learnMoreLink}}Learn more{{/learnMoreLink}}.', {
 							components: {
+								learnMoreLink: <a 
+									href={ support.EMAIL_VALIDATION_AND_VERIFICATION }
+									target="_blank"/>
 
-								learnMoreLink: <a href={ support.EMAIL_VALIDATION_AND_VERIFICATION }
-									target="_blank"
-								/>
 							}
 						}
 					) }
