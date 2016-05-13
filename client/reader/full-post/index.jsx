@@ -53,6 +53,7 @@ var CommentButton = require( 'components/comment-button' ),
 
 import PostExcerpt from 'components/post-excerpt';
 import { getPostTotalCommentsCount } from 'state/comments/selectors';
+import GalleryView from 'components/tinymce/plugins/wpcom-view/gallery-view';
 
 let loadingPost = {
 		URL: '',
@@ -219,9 +220,7 @@ FullPostView = React.createClass( {
 
 					{ post.use_excerpt
 						? <PostExcerpt content={ post.better_excerpt ? post.better_excerpt : post.excerpt } />
-						: <EmbedContainer>
-								<div className="reader__full-post-content" dangerouslySetInnerHTML={ { __html: post.content } } />
-							</EmbedContainer>
+						: this.renderFullPostContent( post.content )
 					}
 
 					{ shouldShowExcerptOnly && ! isDiscoverPost ? <PostExcerptLink siteName={ siteName } postUrl={ post.URL } /> : null }
@@ -231,6 +230,28 @@ FullPostView = React.createClass( {
 			</div>
 		);
 		/*eslint-enable react/no-danger*/
+	},
+
+	renderGalleryScripts: function() {
+		/**
+		 * NOTE: Reuse methods from components/tinymce/plugins/wpcom-view/plugin.js
+		 * to parse content and apply divs/scripts, below is a placeholder for now
+		 */
+		return React.createElement( GalleryView, {
+			siteId: 18561139,
+			content: '[gallery ids=\"2247,2246,2245,2250,2251,2255,2252\" type=\"slideshow\"]'
+		} );
+	},
+
+	renderFullPostContent: function( content ) {
+		return (
+			<div>
+				<EmbedContainer>
+					<div className="reader__full-post-content" _dangerouslySetInnerHTML={ { __html: content } } />
+				</EmbedContainer>
+				{ /data-gallery/.test( content ) ? this.renderGalleryScripts() : null }
+			</div>
+		);
 	},
 
 	_generateButtonClickHandler: function( clickHandler ) {
@@ -518,7 +539,7 @@ FullPostContainer = React.createClass( {
 } );
 
 export default connect(
-	( state, ownProps ) => ( {
+	( state ) => ( {
 		isVisible: state.ui.reader.fullpost.isVisible
 	} ),
 	( dispatch ) => bindActionCreators( {
